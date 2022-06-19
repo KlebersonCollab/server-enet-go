@@ -27,6 +27,8 @@ func onReceived(ev enet.Event) {
 	packet := ev.GetPacket()
 	packetBytes := packet.GetData()
 
+	println(string(packetBytes))
+
 	if string(packetBytes) == "ping" {
 		//peer.SendString("pong", ev.GetChannelID(), enet.PacketFlagReliable)
 		sendtoclient(clients[peer], "pong")
