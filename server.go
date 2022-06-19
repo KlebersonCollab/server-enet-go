@@ -34,7 +34,8 @@ func onReceived(ev enet.Event) {
 	}
 	if string(packetBytes) == "bye" {
 		log.Info("Bye!")
-		peer.Disconnect(0)
+		//peer.Disconnect(0)
+		disconnect(clients[peer])
 		return
 	}
 	packet.Destroy()
@@ -79,6 +80,19 @@ func sendtoclient(id int, msg string) {
 	peer.SendString(msg, 0, enet.PacketFlagReliable)
 }
 
+// Disconnect all clients
+func disconnectAll() {
+	for _, peer := range peers {
+		peer.Disconnect(0)
+	}
+}
+
+// Disconnect a client
+func disconnect(id int) {
+	peer := peers[id]
+	peer.Disconnect(0)
+}
+
 //
 func main() {
 	enet.Initialize()
@@ -94,6 +108,7 @@ func main() {
 	go func() {
 		<-finalize
 		running = false
+		disconnectAll()
 	}()
 	// Main loop
 	for running {
